@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,28 +13,21 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onPressed,
+      borderRadius: BorderRadius.circular(4),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(color: Colors.blueAccent, width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF3B82F6).withValues(alpha: 0.4),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          color: const Color(0xFF3B82F6),
+          borderRadius: BorderRadius.circular(4),
         ),
         child: Text(
           text,
           style: GoogleFonts.poppins(
             color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
           ),
         ),
       ),

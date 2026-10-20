@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "if [ -d flutter ]; then git -C flutter fetch --depth=1 origin stable && git -C flutter reset --hard FETCH_HEAD; else git clone --depth=1 -b stable https://github.com/flutter/flutter.git flutter; fi && flutter/bin/flutter --version",
+  "buildCommand": "flutter/bin/flutter pub get && flutter/bin/flutter build web --release",
+  "outputDirectory": "build/web"
+}

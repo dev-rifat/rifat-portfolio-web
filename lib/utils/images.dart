@@ -5,6 +5,7 @@ class AppImages {
   AppImages._();
 static String payrun="assets/images/payrun.jpg";
 static String easyDesk="assets/images/easydesk.jpg";
+static String gainio="assets/images/gainio.jpg";
 static String rise="assets/images/rise.jpg";
 static String mangoCart="assets/images/mango_cart.jpg";
 static String mangoCartAdmin="assets/images/mango_admin.jpg";

@@ -37,6 +37,7 @@ class _PortfolioHomeState extends State<PortfolioHome> {
         break;
       case "Skills":
         key = _skillsKey;
+        break;
       case "Projects":
         key = _projectsKey;
         break;
@@ -62,53 +63,49 @@ class _PortfolioHomeState extends State<PortfolioHome> {
       backgroundColor: const Color(0xFF020817),
 
       /// MOBILE DRAWER
-        endDrawer: Drawer(
-          backgroundColor: const Color(0xFF020817),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              // Close button
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white, size: 28),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
+      endDrawer: Drawer(
+        backgroundColor: const Color(0xFF020817),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            // Close button
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                onPressed: () => Navigator.of(context).pop(),
               ),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.all(20),
-                  children: [
-                    drawerMenuItem("About", () => scrollToSection("About")),
-                    drawerMenuItem("Skills", () => scrollToSection("Skills")),
-                    drawerMenuItem("Projects", () => scrollToSection("Projects")),
-                    drawerMenuItem("Contact", () => scrollToSection("Contact")),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  drawerMenuItem("About", () => scrollToSection("About")),
+                  drawerMenuItem("Skills", () => scrollToSection("Skills")),
+                  drawerMenuItem("Projects", () => scrollToSection("Projects")),
+                  drawerMenuItem("Contact", () => scrollToSection("Contact")),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-
+      ),
 
       body: SingleChildScrollView(
         controller: _scrollController,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            children: [
-              Container(
-                key: _headerKey,
-                child: HeaderSection(onMenuTap: scrollToSection),
-              ),
-              Container(key: _heroKey, child: HeroSection()),
-              Container(key: _aboutKey, child: AboutMeSection()),
-              Container(key: _skillsKey, child: SkillsSection()),
-              Container(key: _workKey, child: WorkExperienceSection()),
-              Container(key: _projectsKey, child: ProjectsSection()),
-              Container(key: _contactKey, child: ContactSection()),
-            ],
-          ),
+        child: Column(
+          children: [
+            Container(
+              key: _headerKey,
+              child: HeaderSection(onMenuTap: scrollToSection),
+            ),
+            Container(key: _heroKey, child: const HeroSection()),
+            Container(key: _aboutKey, child: const AboutMeSection()),
+            Container(key: _skillsKey, child: const SkillsSection()),
+            Container(key: _workKey, child: const WorkExperienceSection()),
+            Container(key: _projectsKey, child: const ProjectsSection()),
+            Container(key: _contactKey, child: const ContactSection()),
+          ],
         ),
       ),
     );

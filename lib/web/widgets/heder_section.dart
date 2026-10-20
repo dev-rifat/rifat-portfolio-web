@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ---------------- HeaderSection ----------------
-
 class HeaderSection extends StatelessWidget {
   final Function(String) onMenuTap;
   const HeaderSection({super.key, required this.onMenuTap});
@@ -14,30 +12,30 @@ class HeaderSection extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16 : 30,
-        vertical: 20,
+        horizontal: isMobile ? 16 : 40,
+        vertical: 24,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          /// TITLE
+          /// LOGO
           Text(
             "Rifat",
             style: GoogleFonts.poppins(
-              color: Colors.blueAccent,
-              fontSize: isMobile ? 18 : 22,
-              fontWeight: FontWeight.w600,
+              color: const Color(0xFF3B82F6),
+              fontSize: isMobile ? 22 : 26,
+              fontWeight: FontWeight.bold,
             ),
           ),
 
-          /// DESKTOP MENU
+          /// DESKTOP NAVIGATION
           if (!isMobile)
             Row(
               children: [
-                menuItem("About", onMenuTap),
-                menuItem("Skills", onMenuTap),
-                menuItem("Projects", onMenuTap),
-                menuItem("Contact", onMenuTap),
+                _navItem("About", onMenuTap),
+                _navItem("Skills", onMenuTap),
+                _navItem("Projects", onMenuTap),
+                _navItem("Contact", onMenuTap),
               ],
             ),
 
@@ -55,21 +53,21 @@ class HeaderSection extends StatelessWidget {
       ),
     );
   }
-}
 
-/// Desktop menu item
-Widget menuItem(String title, Function(String) onTap) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 14),
-    child: InkWell(
-      onTap: () => onTap(title),
-      child: Text(
-        title,
-        style: GoogleFonts.poppins(
-          color: Colors.white70,
-          fontSize: 16,
+  Widget _navItem(String title, Function(String) onTap) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: InkWell(
+        onTap: () => onTap(title),
+        child: Text(
+          title,
+          style: GoogleFonts.poppins(
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

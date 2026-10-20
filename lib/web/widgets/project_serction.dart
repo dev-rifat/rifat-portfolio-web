@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../global/widgets.dart';
 import '../../utils/api_endpoints.dart';
 import '../../utils/images.dart';
@@ -107,25 +108,12 @@ class ProjectsSection extends StatelessWidget {
       );
     }
 
-    if (width >= 1800) _buildGrid(3, width); // 4K, ultra wide
-    if (width >= 1200) return _buildGrid(3, width); // Desktop
-    if (width >= 1024) return _buildGrid(2, width); // 13.6" laptop, MacBook etc
-    if (width >= 900) return _buildGrid(1, width); // Tablet landscape
-    if (width >= 700) return _buildGrid(1, width); // Tablet / iPad portrait
-    return _buildGrid(4, width); // Phones
-
-    // Tablet (700–1024)
-    if (width < 1100) {
-      return _buildGrid(2, width);
-    }
-
-    // Small laptop (1100–1500)
-    if (width < 1500) {
-      return _buildGrid(3, width);
-    }
-
-    // Large desktop (1500+)
-    return _buildGrid(4, width);
+    if (width >= 1800) return _buildGrid(3, width);
+    if (width >= 1200) return _buildGrid(3, width);
+    if (width >= 1024) return _buildGrid(2, width);
+    if (width >= 900) return _buildGrid(2, width);
+    if (width >= 700) return _buildGrid(1, width);
+    return _buildGrid(1, width);
   }
 
   double _getAspectRatio(double width) {
@@ -195,11 +183,15 @@ class ProjectsSection extends StatelessWidget {
 
   // SAMPLE DATA
   static final projects = [
+
     Project(
       title: "PayRun",
       description:
           "Complete HR & payroll management app with employee tracking, payroll automation and admin interface.",
       imageUrl: AppImages.payrun,
+      appStoreUrl: "https://apps.apple.com/us/app/payrun/id6483939439",
+      playStoreUrl:
+          "https://play.google.com/store/apps/details?id=com.gainhq.payrun",
       tags: [
         "Flutter",
         "Graphql",
@@ -214,10 +206,13 @@ class ProjectsSection extends StatelessWidget {
       ],
     ),
     Project(
-      title: "EasyDesk",
+      title: "Gain.io",
       description:
-          "EasyDesk is more than just a helpdesk software. It is a complete online customer...",
-      imageUrl: AppImages.easyDesk,
+          "Gain.io is a CRM platform for sales, customer support, and live chat management.",
+      imageUrl: AppImages.gainio,
+      appStoreUrl: "https://apps.apple.com/us/app/gain-io/id6760332301",
+      playStoreUrl:
+          "https://play.google.com/store/apps/details?id=com.gainhq.gainio&pcampaignid=web_share",
       tags: [
         "Flutter",
         "Graphql",
@@ -229,10 +224,33 @@ class ProjectsSection extends StatelessWidget {
       ],
     ),
     Project(
+      title: "EasyDesk",
+      description:
+          "EasyDesk is more than just a helpdesk software. It is a complete online customer...",
+      imageUrl: AppImages.easyDesk,
+      appStoreUrl:
+          "https://apps.apple.com/us/app/easydesk-support/id6738735433",
+      playStoreUrl:
+          "https://play.google.com/store/apps/details?id=com.gainhq.easydesk&hl=en",
+      tags: [
+        "Flutter",
+        "Graphql",
+        "aws",
+        "graphql subscription",
+        "Pushy",
+        "Apns Server",
+        "Local notification",
+      ],
+    ),
+    
+    
+    Project(
       title: "LMS Mobile",
       description:
           "Full-featured LMS for students with offline access, quizzes & video learning...",
       imageUrl: AppImages.rise,
+      playStoreUrl:
+          "https://play.google.com/store/apps/details?id=com.data_app_lms.lms_mobile_android_ios&hl=en",
       tags: ["Flutter", "REST API", "GetX", "SQLite"],
     ),
 
@@ -241,12 +259,16 @@ class ProjectsSection extends StatelessWidget {
       description:
           "Mango lets you order fresh mangoes and premium beef from trusted local suppliers—fast, easy, and delivered to your door...",
       imageUrl: AppImages.mangoCart,
+      playStoreUrl:
+          "https://play.google.com/store/apps/details?id=com.rifatalhasan.mango_app_user&hl=en",
       tags: ["Flutter", "REST API", "GetX", "SQLite","WebSocket"],
     ),  Project(
       title: "Mango Cart Distributor",
       description:
           "Seasonal mangoes and premium beef, delivered fast from trusted local suppliers...",
       imageUrl: AppImages.mangoCart,
+      playStoreUrl:
+          "https://play.google.com/store/apps/details?id=com.rifatalhasan.mango_app_admin&hl=en",
       tags: ["Flutter", "REST API", "GetX", "SQLite","WebSocket"],
     ),
 
@@ -261,29 +283,53 @@ class Project {
   final String description;
   final String imageUrl;
   final List<String> tags;
+  final String? appStoreUrl;
+  final String? playStoreUrl;
+
+  /// Link opened by the "Details" button. Falls back to the store pages
+  /// when not set explicitly.
+  final String? detailsUrl;
 
   const Project({
     required this.title,
     required this.description,
     required this.imageUrl,
     required this.tags,
+    this.appStoreUrl,
+    this.playStoreUrl,
+    this.detailsUrl,
   });
+
+  String? get detailsTarget => detailsUrl ?? playStoreUrl ?? appStoreUrl;
 }
 
 // ===============================================
 // PROJECT CARD (FULLY RESPONSIVE)
 // ===============================================
-class ProjectCard extends StatelessWidget {
+class ProjectCard extends StatefulWidget {
   final Project project;
   final double width;
 
   const ProjectCard({super.key, required this.project, required this.width});
 
   @override
+  State<ProjectCard> createState() => _ProjectCardState();
+}
+
+class _ProjectCardState extends State<ProjectCard> {
+  /// Whether the pointer is currently over this card.
+  bool _hovered = false;
+
+  void _setHovered(bool value) {
+    if (_hovered == value || !mounted) return;
+    setState(() => _hovered = value);
+  }
+
+  @override
   Widget build(BuildContext context) {
     // dynamic card sizing
-    final isSmall = width < 450;
-    final isMobile = width < 700;
+    final isSmall = widget.width < 450;
+    final isMobile = widget.width < 700;
 
     final cardPadding = isSmall
         ? 10
@@ -301,33 +347,63 @@ class ProjectCard extends StatelessWidget {
         ? 12
         : 14;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
-        borderRadius: BorderRadius.circular(6),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => _setHovered(true),
+      onExit: (_) => _setHovered(false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+          transform: Matrix4.translationValues(0, _hovered ? -8 : 0, 0),
+          transformAlignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: _hovered ? const Color(0xFF243044) : const Color(0xFF1E293B),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: _hovered
+                  ? Colors.blueAccent.withOpacity(0.6)
+                  : Colors.transparent,
+              width: 1.5,
+            ),
+            boxShadow: [
+              if (_hovered)
+                BoxShadow(
+                  color: Colors.blueAccent.withOpacity(0.28),
+                  blurRadius: 30,
+                  spreadRadius: 2,
+                )
+              else
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // IMAGE
+          // IMAGE (zooms slightly on hover)
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
-            child: Image.asset(
-              project.imageUrl,
-              height: isSmall
-                  ? 100
-                  : isMobile
-                  ? 140
-                  : 190,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            child: AnimatedScale(
+              scale: _hovered ? 1.08 : 1.0,
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeOut,
+              child: Image.asset(
+                widget.project.imageUrl,
+                height: isSmall
+                    ? 100
+                    : isMobile
+                    ? 140
+                    : 190,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
 
@@ -338,7 +414,7 @@ class ProjectCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  project.title,
+                  widget.project.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(
@@ -351,7 +427,7 @@ class ProjectCard extends StatelessWidget {
 
                 // DESCRIPTION (AUTO TRIMS)
                 Text(
-                  project.description,
+                  widget.project.description,
                   maxLines: isSmall ? 3 : 4,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(
@@ -367,7 +443,7 @@ class ProjectCard extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 6,
-                  children: project.tags
+                  children: widget.project.tags
                       .map(
                         (tag) => Container(
                           padding: const EdgeInsets.symmetric(
@@ -398,33 +474,9 @@ class ProjectCard extends StatelessWidget {
                   height: 30,
                   child: Row(
                     children: [
-                      Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: Colors.black, width: 2),
-                          image: DecorationImage(
-                            image: AssetImage(AppImages.appstore),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: Colors.black, width: 2),
-                          image: DecorationImage(
-                            image: AssetImage(AppImages.playstore),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+                      _storeBadge(AppImages.appstore, widget.project.appStoreUrl),
+                      const SizedBox(width: 8),
+                      _storeBadge(AppImages.playstore, widget.project.playStoreUrl),
                     ],
                   ),
                 ),
@@ -432,7 +484,10 @@ class ProjectCard extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    final url = widget.project.detailsTarget;
+                    if (url != null) _openUrl(url);
+                  },
 
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Colors.blueAccent, width: 2),
@@ -469,6 +524,36 @@ class ProjectCard extends StatelessWidget {
           ),
         ],
       ),
+          ),
+        ),
+      );
+  }
+
+  // Store badge — opens the given store URL when the project has one.
+  Widget _storeBadge(String asset, String? url) {
+    final Widget badge = Container(
+      height: 30,
+      width: 100,
+      decoration: BoxDecoration(
+        color: Colors.blueAccent,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.black, width: 2),
+        image: DecorationImage(image: AssetImage(asset), fit: BoxFit.cover),
+      ),
+    );
+
+    if (url == null) return badge;
+
+    return InkWell(
+      onTap: () => _openUrl(url),
+      borderRadius: BorderRadius.circular(4),
+      child: badge,
     );
   }
+}
+
+/// Opens [url] in a new tab (web) / the platform browser (mobile).
+Future<void> _openUrl(String url) async {
+  final uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) await launchUrl(uri);
 }

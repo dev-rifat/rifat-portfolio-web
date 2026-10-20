@@ -8,87 +8,68 @@ class AboutMeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final bool isMobile = width < 900;
+
     return Container(
       width: double.infinity,
-      color: const Color(0xFF0D1117),
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
+      color: const Color(0xFF020817),
+      padding: EdgeInsets.symmetric(
+        vertical: 80,
+        horizontal: isMobile ? 20 : 80,
+      ),
       child: Column(
         children: [
           // Badge
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28.0),
-            child: CustomButton(text: 'About Me', onPressed: () {}),
-          ),
-
-          const SizedBox(height: 40),
+          CustomButton(text: 'About Me', onPressed: () {}),
+          const SizedBox(height: 30),
 
           // Title
-          AnimatedSlide(
-            duration: const Duration(milliseconds: 800),
-            offset: const Offset(0, 0.3),
-            child: Text(
-              'Who I Am',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                height: 1.1,
-              ),
+          Text(
+            'Who I Am',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              fontSize: isMobile ? 36 : 48,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
-
           const SizedBox(height: 24),
 
           // Description
-          AnimatedSlide(
-            duration: const Duration(milliseconds: 900),
-            offset: const Offset(0, 0.3),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Text(
-                "I'm a dedicated Flutter Developer specializing in building fast, beautiful, and scalable cross-platform mobile applications. "
-                "With a strong focus on clean architecture, performance optimization, and pixel-perfect UI, I develop apps that deliver smooth and modern user experiences.",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  color: Colors.white70,
-                  fontSize: 16,
-                  height: 1.8,
-                ),
+          SizedBox(
+            width: 1000,
+            child: Text(
+              "I'm a dedicated Flutter developer specializing in fast, beautiful, and scalable cross-platform mobile apps. "
+              "Focused on clean architecture, performance optimization, and pixel-perfect UI to deliver smooth, modern user experiences.",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                color: Colors.white70,
+                fontSize: 16,
+                height: 1.6,
               ),
             ),
           ),
 
-          const SizedBox(height: 100),
-
-          // Responsive Content
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 80.0),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final bool isMobile = constraints.maxWidth < 900;
-
-                return isMobile
-                    ? Column(
-                        children: [
-                          _buildFeaturesColumn(),
-                          const SizedBox(height: 80),
-                          _buildJourneyCard(),
-                        ],
-                      )
-                    : Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(child: _buildFeaturesColumn()),
-                          const SizedBox(width: 100),
-                          Expanded(child: _buildJourneyCard()),
-                        ],
-                      );
-              },
-            ),
-          ),
           const SizedBox(height: 80),
+
+          // Responsive Content: Features & Journey
+          isMobile
+              ? Column(
+                  children: [
+                    _buildFeaturesColumn(),
+                    const SizedBox(height: 60),
+                    _buildJourneyCard(),
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(flex: 1, child: _buildFeaturesColumn()),
+                    const SizedBox(width: 80),
+                    Expanded(flex: 1, child: _buildJourneyCard()),
+                  ],
+                ),
         ],
       ),
     );
@@ -98,107 +79,91 @@ class AboutMeSection extends StatelessWidget {
     return Column(
       children: [
         _featureItem(
-          Icons.shield_rounded,
+          Icons.shield_outlined,
           'Reliable & Secure',
-          'I build applications with security and reliability at their core, ensuring your data is protected.',
+          'I build applications with reliability and security at their core, ensuring your data stays protected.',
         ),
         const SizedBox(height: 32),
         _featureItem(
-          Icons.lightbulb_rounded,
+          Icons.lightbulb_outline,
           'Innovative Solutions',
-          'I leverage cutting-edge technologies to create innovative solutions for complex problems.',
+          'I use modern technologies and industry best practices to solve problems creatively and efficiently.',
         ),
         const SizedBox(height: 32),
         _featureItem(
-          Icons.design_services_rounded,
+          Icons.architecture,
           'User-Focused Design',
-          'I prioritize user experience, creating intuitive interfaces that delight users.',
+          'I prioritize user experience to create intuitive, smooth, and visually appealing interfaces.',
         ),
       ],
     );
   }
 
   Widget _featureItem(IconData icon, String title, String desc) {
-    return AnimatedSlide(
-      duration: const Duration(milliseconds: 700),
-      offset: const Offset(0, 0.3),
-      child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF3B82F6), Color(0xFF1E40AF)],
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xFF3B82F6),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Icon(icon, color: Colors.white, size: 24),
+        ),
+        const SizedBox(width: 20),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF3B82F6).withOpacity(0.5),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
+              const SizedBox(height: 8),
+              Text(
+                desc,
+                style: GoogleFonts.poppins(
+                  color: Colors.white60,
+                  fontSize: 14,
+                  height: 1.5,
                 ),
-              ],
-            ),
-            child: Icon(icon, color: Colors.white, size: 28),
+              ),
+            ],
           ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  desc,
-                  style: GoogleFonts.poppins(
-                    color: Colors.white60,
-                    fontSize: 14,
-                    height: 1.6,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildJourneyCard() {
-    return AnimatedSlide(
-      duration: const Duration(milliseconds: 900),
-      offset: const Offset(0, 0.3),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'My Journey',
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'My Journey',
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 24),
-          Text(
-            "Passionate Flutter developer with 2.5+ years of experience building high-performance and scalable mobile applications. Skilled in GetX, BLoC, REST & GraphQL APIs, Firebase, CI/CD, and push notification systems (Firebase, Pushy, APNs). Experienced in full app lifecycle from UI design to publishing on Play Store and App Store.",
-            style: GoogleFonts.poppins(
-              color: Colors.white70,
-              fontSize: 14,
-              height: 1.8,
-              letterSpacing: 0.3,
-            ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          "Flutter developer with 3+ years of experience building scalable, high-performance mobile apps. "
+          "Skilled in GetX, BLoC, REST / GraphQL, Firebase, CI/CD, and push notifications. "
+          "Experienced in full development lifecycle – UI/UX, architecture, and publishing to Play Store & App Store.",
+          style: GoogleFonts.poppins(
+            color: Colors.white70,
+            fontSize: 16,
+            height: 1.8,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

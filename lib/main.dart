@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_protfolio/web/screen/portfolio_home.dart';
+import 'web/screen/portfolio_home.dart';
 
 void main() {
   runApp(const PortfolioApp());
@@ -11,8 +11,13 @@ class PortfolioApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Rifat Portfolio',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.dark,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: const Color(0xFF3B82F6),
+        scaffoldBackgroundColor: const Color(0xFF020817),
+      ),
       home: const PortfolioHome(),
     );
   }

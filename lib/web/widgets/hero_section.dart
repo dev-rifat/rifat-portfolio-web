@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,16 +60,8 @@ class _HeroSectionState extends State<HeroSection>
       builder: (context, child) {
         return Container(
           padding: EdgeInsets.symmetric(
-            horizontal: isMobile
-                ? 20
-                : isTablet
-                ? 50
-                : 80,
-            vertical: isMobile
-                ? 40
-                : isTablet
-                ? 60
-                : 80,
+            horizontal: isMobile ? 20 : isTablet ? 50 : 80,
+            vertical: isMobile ? 40 : isTablet ? 60 : 80,
           ),
           child: isMobile
               ? Column(
@@ -89,12 +83,10 @@ class _HeroSectionState extends State<HeroSection>
                 )
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: isTablet
-                      ? CrossAxisAlignment.center
-                      : CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      flex: isTablet ? 5 : 6,
+                      flex: 6,
                       child: Transform.translate(
                         offset: Offset(-_slideAnimation.value, 0),
                         child: Opacity(
@@ -105,7 +97,7 @@ class _HeroSectionState extends State<HeroSection>
                     ),
                     const SizedBox(width: 40),
                     Expanded(
-                      flex: isTablet ? 4 : 5,
+                      flex: 5,
                       child: Transform.translate(
                         offset: Offset(_slideAnimation.value, 0),
                         child: Opacity(
@@ -123,21 +115,14 @@ class _HeroSectionState extends State<HeroSection>
 
   Widget _leftText(bool isMobile, bool isTablet, bool isDesktop) {
     return Column(
-      crossAxisAlignment: isMobile
-          ? CrossAxisAlignment.center
-          : CrossAxisAlignment.start,
+      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
         Text(
           "Hi,",
           style: GoogleFonts.poppins(
-            color: Colors.white.withValues(alpha: 0.9),
-            fontSize: isMobile
-                ? 24
-                : isTablet
-                ? 32
-                : 38,
+            color: Colors.white,
+            fontSize: isMobile ? 24 : 32,
             fontWeight: FontWeight.w500,
-            letterSpacing: 1.2,
           ),
         ),
         const SizedBox(height: 8),
@@ -145,11 +130,7 @@ class _HeroSectionState extends State<HeroSection>
           "I'm Rifat",
           style: GoogleFonts.poppins(
             color: Colors.white,
-            fontSize: isMobile
-                ? 36
-                : isTablet
-                ? 48
-                : 62,
+            fontSize: isMobile ? 48 : 64,
             fontWeight: FontWeight.bold,
             height: 1.1,
           ),
@@ -158,64 +139,70 @@ class _HeroSectionState extends State<HeroSection>
         Text(
           "Apps Developer",
           style: GoogleFonts.poppins(
-            color: Colors.blueAccent,
-            fontSize: isMobile
-                ? 38
-                : isTablet
-                ? 52
-                : 66,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.5,
+            color: const Color(0xFF3B82F6),
+            fontSize: isMobile ? 48 : 64,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
-
-        Text(
-          "I develop modern, scalable Flutter applications for mobile and web, following clean architecture principles, with robust state management and seamless user experiences",
-          style: GoogleFonts.poppins(color: Colors.grey, fontSize: 16),
+        const SizedBox(height: 24),
+        SizedBox(
+          width: 600,
+          child: Text(
+            "I develop modern, scalable Flutter applications for mobile and web, following clean architecture principles, with robust state management and seamless user experiences",
+            textAlign: isMobile ? TextAlign.center : TextAlign.start,
+            style: GoogleFonts.poppins(
+              color: Colors.white70,
+              fontSize: 16,
+              height: 1.6,
+            ),
+          ),
         ),
         const SizedBox(height: 40),
-
         Wrap(
-          spacing: 24,
+          spacing: 20,
           runSpacing: 16,
           alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
           children: [
             _buildButton(
               "View My Work",
-              Colors.blueAccent,
+              const Color(0xFF3B82F6),
               isMobile,
+              hasIcon: true,
               click: () async {
-                final url = Uri.parse(
-                  "https://drive.google.com/file/d/17c5KrbqtvnFzaWQ9QTpxq8X0nGL54kib/view?usp=sharing",
-                );
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
+                final url = Uri.parse("https://github.com/dev-rifat");
+                if (await canLaunchUrl(url)) await launchUrl(url);
               },
             ),
-
-            //https://drive.google.com/file/d/17c5KrbqtvnFzaWQ9QTpxq8X0nGL54kib/view?usp=sharing
             _buildButton(
               "My resume",
               Colors.transparent,
               isMobile,
               border: true,
               click: () async {
-
-                print("asdfjjkasdhjfghjsahdjgd");
-                final url = Uri.parse(
-                  "https://drive.google.com/file/d/17c5KrbqtvnFzaWQ9QTpxq8X0nGL54kib/view?usp=sharing",
-                );
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
+                final url = Uri.parse("https://drive.google.com/file/d/17c5KrbqtvnFzaWQ9QTpxq8X0nGL54kib/view?usp=sharing");
+                if (await canLaunchUrl(url)) await launchUrl(url);
               },
             ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _socialIcon("assets/images/git.png", () async {
+              final url = Uri.parse("https://github.com/dev-rifat");
+              if (await canLaunchUrl(url)) await launchUrl(url);
+            }),
+            const SizedBox(width: 25),
+            _socialIcon("assets/images/linkdin.png", () async {
+              final url = Uri.parse("https://www.linkedin.com/in/lutfar-rahman-rifat-1a769323a");
+              if (await canLaunchUrl(url)) await launchUrl(url);
+            }),
+            const SizedBox(width: 25),
+            _socialIcon("assets/images/email.png", () async {
+              final url = Uri.parse("mailto:lutfurrh850@gmail.com");
+              if (await canLaunchUrl(url)) await launchUrl(url);
+            }),
           ],
         ),
       ],
@@ -227,148 +214,106 @@ class _HeroSectionState extends State<HeroSection>
     Color bgColor,
     bool isMobile, {
     bool border = false,
+    bool hasIcon = false,
     required Function click,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: () => click(),
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 24 : 18,
-            vertical: isMobile ? 13 : 13,
-          ),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(3),
-            border: border
-                ? Border.all(color: Colors.blueAccent, width: .6)
-                : null,
-            boxShadow: [
-              // Shadow for filled button (Got a project?)
-              // if (!border) ...[
-              //   BoxShadow(
-              //     color: Colors.blueAccent.withValues(alpha: 0.6),
-              //     blurRadius: 20,
-              //     spreadRadius: 2,
-              //     offset: const Offset(0, 8),
-              //   ),
-              //   BoxShadow(
-              //     color: Colors.black.withValues(alpha: 0.3),
-              //     blurRadius: 15,
-              //     offset: const Offset(0, 5),
-              //   ),
-              // ],
-              // Shadow for outline button (My resume)
-              // if (border) ...[
-              //   BoxShadow(
-              //     color: Colors.blueAccent.withValues(alpha: 0.4),
-              //     blurRadius: 15,
-              //     spreadRadius: 1,
-              //     offset: const Offset(0, 5),
-              //   ),
-              //   BoxShadow(
-              //     color: Colors.black.withValues(alpha: 0.2),
-              //     blurRadius: 10,
-              //     offset: const Offset(0, 3),
-              //   ),
-              // ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(4),
+          border: border ? Border.all(color: Colors.white24, width: 1) : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text,
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            if (hasIcon) ...[
+              const SizedBox(width: 8),
+              const Icon(Icons.arrow_forward, color: Colors.white, size: 16),
             ],
-          ),
-          child: !border
-              ? Wrap(
-                  children: [
-                    Text(
-                      text,
-                      style: GoogleFonts.poppins(
-                        color: border
-                            ? Colors.blueAccent
-                            : const Color(0xFF020817),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-
-                    Icon(Icons.arrow_forward_outlined, size: 18),
-                  ],
-                )
-              : Text(
-                  text,
-                  style: GoogleFonts.poppins(
-                    color: border ? Colors.blueAccent : const Color(0xFF020817),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.8,
-                  ),
-                ),
+          ],
         ),
       ),
     );
   }
 
   Widget _rightImage(bool isMobile, bool isTablet, bool isDesktop) {
-    double containerSize = isMobile
-        ? 280
-        : isTablet
-        ? 360
-        : 440;
-    double imageSize = isMobile
-        ? 220
-        : isTablet
-        ? 290
-        : 350;
+    final double targetSize = isMobile ? 280 : isTablet ? 340 : 400;
+    const double ringWidth = 20;
 
-    return Container(
-      height: containerSize,
-      width: containerSize,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: const RadialGradient(
-          colors: [Color(0xFF1E2A3A), Color(0xFF0E1621)],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blueAccent.withValues(alpha: 0.2),
-            blurRadius: 40,
-            spreadRadius: 10,
-          ),
-        ],
-      ),
-      child: Center(
-        child: ClipOval(
-          child: Image.network(
-            "https://cdn.dribbble.com/userupload/11302619/file/original-2ecd4d83189d8c3ac7c8a481cb15c8b9.jpg?resize=800x800",
-            width: imageSize,
-            height: imageSize,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                width: imageSize,
-                height: imageSize,
-                color: Colors.white10,
-                child: const CircularProgressIndicator(
-                  color: Colors.blueAccent,
-                  strokeWidth: 2,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double available = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : targetSize;
+        final double size = math.min(targetSize, available);
+        final double dpr = MediaQuery.devicePixelRatioOf(context);
+
+        return Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: size,
+            height: size,
+            padding: const EdgeInsets.all(ringWidth),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: const Color(0xFF0D1117),
+              border: Border.all(color: Colors.white10, width: ringWidth),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF3B82F6).withOpacity(0.1),
+                  blurRadius: 40,
+                  spreadRadius: 10,
                 ),
-              );
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: imageSize,
-                height: imageSize,
-                color: Colors.white10,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.blueAccent,
-                  size: imageSize * 0.3,
+              ],
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                "assets/images/me.jpeg",
+                fit: BoxFit.cover,
+                alignment: const Alignment(0, -0.15),
+                cacheWidth: (size * dpr).round(),
+                errorBuilder: (context, error, stackTrace) => Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF1E293B), Color(0xFF0D1117)],
+                    ),
+                  ),
+                  child: const Icon(Icons.person, size: 80, color: Colors.white38),
                 ),
-              );
-            },
+              ),
+            ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget _socialIcon(String asset, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Image.asset(
+        asset,
+        width: 32,
+        height: 32,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => const Icon(
+          Icons.link,
+          size: 24,
+          color: Colors.white70,
         ),
       ),
     );
